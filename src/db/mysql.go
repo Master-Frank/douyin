@@ -2,14 +2,12 @@ package db
 
 import (
 	"database/sql"
-	. "douyin/src/config"
+	. "douyin/config"
 	_ "github.com/go-sql-driver/mysql"
 	"log"
 )
 
 var DB *sql.DB
-
-
 
 func init() {
 
@@ -17,7 +15,7 @@ func init() {
 	dataSourceName := AppConfig.Get("datasource.dataSourceName").(string)
 	//打印文件读取出来的内容:
 	log.Printf("数据库为 %s, 数据库链接为%s", driverName, dataSourceName)
-	db, err := sql.Open(driverName, dataSourceName)
+	db, err := sql.Open(driverName, dataSourceName+"?charset=utf8&parseTime=True")
 	if err != nil {
 		panic(err)
 	}

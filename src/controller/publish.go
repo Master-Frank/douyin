@@ -1,10 +1,8 @@
 package controller
 
 import (
-	"douyin/src/cache"
-	. "douyin/src/common"
-	"douyin/src/service"
-	"encoding/json"
+	. "douyin/common"
+	service2 "douyin/service"
 	"github.com/kataras/iris/v12"
 	"log"
 	"strconv"
@@ -21,31 +19,27 @@ func (pc *PublishController) GetList(ctx iris.Context) {
 
 	request := ctx.Request()
 	//获取参数
-	token := request.FormValue("token")
-	userID := request.FormValue("user_id")
-	userId := cache.RCGet(token).Val()
+	//token := request.FormValue("token")
+	//userId := cache.RCGet(token).Val()
+	uid := request.FormValue("user_id")
 
-	//查看输出
-	log.Println("token:"+token, "userId:"+userID, "userid2:"+userId)
-
-	if userId == "" {
-		_, err := ctx.JSON(VideoListResponse{
-			StatusCode: 301,
-			StatusMsg:  "鉴权失败，请检测是否登录",
-			VideoLists: []VideoList2{},
-		})
-		if err != nil {
-			log.Println(err.Error())
-		}
-		return
-	}
-	log.Println("通过验证")
+	//if userId == "" {
+	//	_, err := ctx.JSON(VideoListResponse{
+	//		StatusCode: 301,
+	//		StatusMsg:  "鉴权失败，请检测是否登录",
+	//		VideoLists: []VideoList2{},
+	//	})
+	//	if err != nil {
+	//		log.Println(err.Error())
+	//	}
+	//	return
+	//}
 	//获取视频列表
-	useridINT, err := strconv.Atoi(userId)
+	useridINT, err := strconv.Atoi(uid)
 	if err != nil {
 		log.Println(err)
 	}
-	videoLists := service.GetVideoListsById(useridINT)
+	videoLists := service2.GetVideoListsById(useridINT)
 
 	//不知道为什么videoLists不能为空，等我解决吧
 	//已解决：videoLists应为是数组，所以是空是[]，而不是nil
@@ -54,12 +48,11 @@ func (pc *PublishController) GetList(ctx iris.Context) {
 		StatusMsg:  "成功",
 		VideoLists: videoLists,
 	})
-	log.Println(json.Marshal(videoLists))
 	if err != nil {
 		log.Println(err.Error())
 	}
 }
 
 func (pc *PublishController) PostAction(ctx iris.Context) {
-	service.Contribution(ctx)
+	service2.Contribution(ctx)
 }

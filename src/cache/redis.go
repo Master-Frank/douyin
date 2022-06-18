@@ -2,7 +2,7 @@ package cache
 
 import (
 	"context"
-	. "douyin/src/config"
+	. "douyin/config"
 	"fmt"
 	"github.com/go-redis/redis/v8"
 	"time"
@@ -63,4 +63,16 @@ func ExampleClient() {
 	} else {
 		fmt.Println("key2", val2)
 	}
+}
+
+func RCSAdd(key string, members interface{}) {
+	rc.SAdd(ctx, key, members)
+}
+
+func RCSRem(key string, members interface{}) {
+	rc.SRem(ctx, key, members)
+}
+
+func RCSmembers(key string) *redis.StringSliceCmd {
+	return rc.SMembers(ctx, key)
 }
